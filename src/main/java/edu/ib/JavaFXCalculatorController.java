@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.text.DecimalFormat;
+
 public class JavaFXCalculatorController {
     private boolean     dotPressed          = false; //A flag monitoring the '.' sign usage
     private boolean     zeroPressed         = false; //A flag monitoring the '0' input by user. inputs like: 00010 aren't allowed
@@ -181,9 +183,9 @@ public class JavaFXCalculatorController {
         if(!operationPerformed){
             if(!display.getText().equals(""))
                 calculator.setNumber(Double.parseDouble(display.getText()));}
-            double test = calculator.performOperation(percentFlag);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            System.out.println(test);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            display.setText(String.valueOf(test));//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        Double value = calculator.performOperation(percentFlag);
+        DecimalFormat formatone = new DecimalFormat("####0.#E0");
+        display.setText(formatone.format(value));
             operationPerformed = true;
     }
 
