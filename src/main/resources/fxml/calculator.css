@@ -14,7 +14,6 @@
 
 .orangeButton:hover{
     -fx-background-color: rgb(239, 144, 68);
-    -fx-font-weight: bold;
 }
 
 .grayButton{
@@ -25,7 +24,6 @@
 
 .grayButton:hover{
     -fx-background-color: rgb(208, 208, 208);
-    -fx-font-weight: bold;
 }
 
 .display{

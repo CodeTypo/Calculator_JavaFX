@@ -181,7 +181,9 @@ public class JavaFXCalculatorController {
         if(!operationPerformed){
             if(!display.getText().equals(""))
                 calculator.setNumber(Double.parseDouble(display.getText()));}
-            display.setText(Double.toString(calculator.performOperation(percentFlag)));
+            double test = calculator.performOperation(percentFlag);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            System.out.println(test);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            display.setText(String.valueOf(test));//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             operationPerformed = true;
     }
 
