@@ -8,15 +8,15 @@ import javafx.scene.control.TextField;
 import java.text.DecimalFormat;
 
 public class JavaFXCalculatorController {
-    private boolean     dotPressed          = false; //A flag monitoring the '.' sign usage
-    private boolean     zeroPressed         = false; //A flag monitoring the '0' input by user. inputs like: 00010 aren't allowed
+    private boolean     dotPressed          = false;            //A flag monitoring the '.' sign usage
+    private boolean     zeroPressed         = false;            //A flag monitoring the '0' input by user. inputs like: 00010 aren't allowed
     private final Calculator  calculator    = new Calculator(); // A new instance of calculator Class object
-    private boolean     operationPerformed  = false; //A flag that notifies when '=' sign have been pressed
-    private boolean     operationSelected   = false; //A flag that notifies when an mathematical operation operator have been clicked
-    private boolean     percentFlag         = false; //A flag that notifies when a percent sign have been clicke
+    private boolean     operationPerformed  = false;            //A flag that notifies when '=' sign have been pressed
+    private boolean     operationSelected   = false;            //A flag that notifies when an mathematical operation operator have been clicked
+    private boolean     percentFlag         = false;            //A flag that notifies when a percent sign have been clicke
 
-    //A serie of FXML objects being initialized and instantinated.
-
+    //A series of FXML objects being initialized and instantiated.
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FXML INIT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @FXML
     private TextField display;
 
@@ -76,19 +76,24 @@ public class JavaFXCalculatorController {
 
     @FXML
     private Button equals;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /FXML INIT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     //A method executing while a numeric button have been clicked.
     @FXML
     void numeric_btn_clicked(ActionEvent event) {
-        Button button = (Button) event.getSource();
-        String id     = button.getId();
-        if(operationPerformed)
-        {
-            clear();
+        Button button = (Button) event.getSource(); //Gets a reference to the button
+        String id     = button.getId();             //Gets its id
+        if(operationPerformed)                      //checks if the number was clicked after '=' or '%' was clicked
+        {                                           //If so, it means the user has finished his previous calculations
+            clear();                                //So the calculator is being cleared
         }
         double current;
+        //An enhanced if statement, checks if the displayed value is different than "" if so, it is being stored into 'current' var else, current = 0;
         current = !display.getText().equals("") ? Double.parseDouble(display.getText()) : 0;
+
+        //A statement checking if the number on display is higher than 0 OR if 0 has not been pressed yet OR a dot has been pressed
         if(current >0 || !zeroPressed|| dotPressed) {
+            //If the statement is correct, a number displayed by the button clicked can be added to the number shown on display
             switch (id) {
                 case "zero"     -> {display.appendText("0");zeroPressed = true;}
                 case "one"      -> display.appendText("1");
@@ -102,19 +107,22 @@ public class JavaFXCalculatorController {
                 case "nine"     -> display.appendText("9");
             }
         }
+        //If the user presseed the dot '.' sign
         if(id.equals("dot")){
+                //If the dot has not been pressed yet and the display is not empty
                 if (!dotPressed && !(display.getText().equals(""))) {
-                    display.appendText(".");
-                    dotPressed = true;
+                    display.appendText("."); //Its being displayed
+                    dotPressed = true;       //A flag is being set
                 }
             }
         }
 
-    //A method executing when other buttons have been clicked
+    //A method executing when other (operational) buttons have been clicked {% , = , - , + , * , / }
     @FXML
     void operation_btn_clicked(ActionEvent event) {
-        Button button = (Button) event.getSource();
-        String id = button.getId();
+        Button button = (Button) event.getSource(); //Gets a reference to the button
+        String id = button.getId();                 //Gets its id
+
         switch (id){
             case "sum":
             case "subtract":
@@ -129,8 +137,8 @@ public class JavaFXCalculatorController {
 
             case "percent":
                 if(operationSelected){
-                    percentFlag = true;
-                    performEquals();
+                    percentFlag = true; //When the user pressed the percent sign, the equals method changes a bit
+                    performEquals();    //So the flag needs to be set before calling it
                 }
                 break;
 
@@ -142,19 +150,20 @@ public class JavaFXCalculatorController {
                 performEquals();
                 break;
         }
-        dotPressed = false;
-        zeroPressed = false;
+        dotPressed = false;             //After pressing an operation symbol, user should be able to type
+        zeroPressed = false;            //Any number he/she wants, so the flags are being cleared
     }
 
     private void operatorClicked(String id) {
-        calculatorMaintenance();
-        calculator.setOperation(id);
-        operationSelected = true;
-        percentFlag = false;
+        calculatorMaintenance();        //calls calculatorMaintenance() - some basic repetitive tasks
+        calculator.setOperation(id);    //calls Calculator class setOperation(id) method
+        operationSelected = true;       //Sets the flag telling that the user selected some mathematical operation
+        percentFlag = false;            //User did not pressed the % sign so the flag is being cleared
     }
 
 
     private void signSwap() {
+        //A sign swap method, everything it does is just adding or removing the '-' sign in front of the number, of course it affects the number's value
         if(!display.getText().equals("")){
             String number="";
             if(!display.getText().startsWith("-")){
@@ -170,32 +179,38 @@ public class JavaFXCalculatorController {
     }
 
     public void clear(){
-        calculator.reset();
-        display.clear();
-        dotPressed = false;
-        zeroPressed = false;
-        operationPerformed = false;
-        percentFlag = false;
-        operationSelected = false;
+        calculator.reset(); //A Calculator object's reset() method is being called
+        display.clear();    //The display is being cleared
+        dotPressed = zeroPressed = operationPerformed = percentFlag = operationSelected = false; //All bools set to FALSE
     }
 
     public void performEquals(){
+        //If no mathematical operation has been performed yet
         if(!operationPerformed){
+            //if the display isn't empty
             if(!display.getText().equals(""))
+                //Calls the Calculator class setNumber(double x) method making the calculator to store the value that was displayed on the screen
                 calculator.setNumber(Double.parseDouble(display.getText()));}
+
+        //Calling the calculator's performOperation(percentFlag) method and storing its return value in 'value' variable
         Double value = calculator.performOperation(percentFlag);
-        DecimalFormat formatone = new DecimalFormat("####0.#E0");
-        display.setText(formatone.format(value));
+        //Scientific notation formatter
+        DecimalFormat formatter = new DecimalFormat("####0.#E0");
+        //Prints the value on the display
+        display.setText(formatter.format(value));
             operationPerformed = true;
     }
 
 
     public void calculatorMaintenance(){
+        //A method containing a group of statements that got called frequently in the code after the operational buttons were clicked
+        //Assuming the user clicks an operational button after he/she input some number
+        //Checking if there was an input, if there was, its being passed to the Calculator object via its setNumber(double x)method
         if(!display.getText().equals(""))
             calculator.setNumber(Double.parseDouble(display.getText()));
-        display.clear();
-        operationPerformed = false;
-        zeroPressed = false;
+        display.clear();            //display is being cleared to be ready for the second nu.ber input
+        operationPerformed = false; //An operation has not been performed yet, user input only one number
+        zeroPressed = false;        //User is able to input zero at the beginning of the number again
     }
 
     @FXML

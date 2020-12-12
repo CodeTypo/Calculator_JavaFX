@@ -1,29 +1,27 @@
 package edu.ib;
 
 public class Calculator {
+    //A calculator class responsible for handling all the mathematical operations on two numbers
+    private double oldNumber = Double.NaN;  //The first number (initially set to NaN for the purpose of one if statement)
+    private double newNumber = 0;           //The second number
+    private String operation="";            //A string holding the name of the mathematical operator selected by user
 
-    private double oldNumber = Double.NaN;
-    private double newNumber = 0;
-    private String operation="";
-
-    public Calculator() {
-    }
+    public Calculator() {}
 
     public void setOperation(String operation) {this.operation = operation;}
 
-
-    public void setNumber(double x){
-        if(Double.isNaN(oldNumber))
-            oldNumber = x;
+    public void setNumber(double x){ //A method responsible for setting the values of OldNumber and newNumber fields
+        if(Double.isNaN(oldNumber))  //If old number has not been set yet
+            oldNumber = x;           //Then its being set
         else{
-            newNumber = x;
+            newNumber = x;           //After the first one, the second is being set
         }
     }
 
-
+    //A method that gets called after the user input two numbers and pressed the equals (=) or percent(%) sign
     public double performOperation(boolean percents){
         double result = 0;
-        if(!percents){
+        if(!percents){          //if % has not been clicked, basic math is performed as follows:
             switch(operation){
                 case "sum"      -> result = oldNumber + newNumber;
                 case "subtract" -> result = oldNumber - newNumber;
@@ -31,10 +29,18 @@ public class Calculator {
                 case "divide"   -> result = oldNumber / newNumber;
             }
         } else {
-            switch(operation){
-                case "sum"      -> result = oldNumber + newNumber/100 * oldNumber;
+            switch(operation){  //if the % has been clicked operations are being modified a bit
+
+                //assuming 10 + 20 % should give the result 10 + ( 20/100 * 10 ) = 10.2
+                case "sum"      -> result = oldNumber + (newNumber/100 * oldNumber);
+
+                //assuming 10 - 20 % should give the result 10 - ( 20/100 * 10 ) = 9.8
                 case "subtract" -> result = oldNumber - newNumber/100 *oldNumber;
+
+                //assuming 10 * 20 % should give the result 10 * (20/100) = 0.2
                 case "multiply" -> result = oldNumber * newNumber/100;
+
+                //assuming 10 / 20 % should give the result 10 / (20/100) = 50 !!! NIE DZIAłA ZWRACA 500*E^-5
                 case "divide"   -> result = oldNumber / newNumber/100;
             }
         }
