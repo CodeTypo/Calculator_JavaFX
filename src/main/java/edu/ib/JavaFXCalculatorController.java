@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class JavaFXCalculatorController {
     private boolean     dotPressed          = false;            //A flag monitoring the '.' sign usage
@@ -139,7 +141,7 @@ public class JavaFXCalculatorController {
                 if(operationSelected){
                     percentFlag = true; //When the user pressed the percent sign, the equals method changes a bit
                     performEquals();    //So the flag needs to be set before calling it
-                }
+                }else {clear();}
                 break;
 
             case "clear":
@@ -195,7 +197,9 @@ public class JavaFXCalculatorController {
         //Calling the calculator's performOperation(percentFlag) method and storing its return value in 'value' variable
         Double value = calculator.performOperation(percentFlag);
         //Scientific notation formatter
-        DecimalFormat formatter = new DecimalFormat("####0.#E0");
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat formatter = (DecimalFormat) nf;
+        formatter.applyPattern("####0.#E0");
         //Prints the value on the display
         display.setText(formatter.format(value));
             operationPerformed = true;
